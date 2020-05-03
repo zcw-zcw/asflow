@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="photo">
+
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url:"/test/getphoto",
+            type:"get",
+            data:{iid:getParam("iid"),type:getParam("type"),did:getParam("did")},
+            success:function (msg) {
+                if (msg.code==100){
+                    var s="";
+                    s+="<p>备注:"+msg.data.photo[0].disc+"</p>";
+                    for(i in msg.data.photo){
+                        s+="<img src=\'"+msg.data.photo[i].url+"'/>";
+                        console.log(s);
+                    }
+                    document.getElementById("photo").innerHTML=s;
+                }
+            }
+        });
+    })
+
+
+</script>
+</html>

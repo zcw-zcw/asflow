@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+	</head>
+	<body>
+		<div>
+			<br />
+			
+		<input type="checkbox" id="check" checked style="margin-left: 30px;margin-right: 30px;" ><label>处理所有模块</label>
+		<br />
+		<br />
+		<br />
+		
+		<button style="margin-left: 30vw;" onclick=sure()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll()">取消</button>
+		</div>
+	</body>
+	<script src="/lib/layui/layui.js" charset="utf-8"></script>
+	<script src="/lib/jquery-3.4.1.min.js"></script>
+<script>
+	$.ajax({
+		url:"project/join",
+		type:"get",
+		data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
+		success:function (msg) {
+			if (msg.code==200) {
+				alert(msg.data.tip);
+			}else {
+				if (msg.data.code=="2") {
+					alert("无权访问");
+					location="/index";
+				}
+			}
+		}
+	})
+function sure() {
+    $.ajax({
+        url: "/project/nextcode",
+        type: "post",
+        data: {pid: parent.location.search.split("=")[1]},
+        success: function (msg) {
+            if (msg.code == 100) {
+                parent.location = "/code_list?pid=" + parent.getParam("pid");
+            }
+        }
+    })
+
+}
+
+</script>
+</html>

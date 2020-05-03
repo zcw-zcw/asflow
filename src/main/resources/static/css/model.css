@@ -1,0 +1,38 @@
+.top_title{
+	margin-left: 1vw;
+
+}
+.zero{
+		font-size: 1vw;
+	margin-left: 50px;
+	margin-top: 50px;
+	width: 60%;
+	float: left;
+	
+}
+.zero p{
+	display: inline;
+}
+.one{
+	/* font-size: 3vw; */
+margin-left: 50px;
+margin-top: 50px;
+width: 60%;
+float: left;
+}
+
+.two{
+	width: 35%;
+	float: right;
+	margin-top: 50px;
+}
+
+.two th{
+	
+		height: 32px;
+		
+}
+.two td{
+	border: 1px solid #e6e6e6;
+	
+}

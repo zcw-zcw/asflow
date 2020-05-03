@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div>
+    <br />
+    用户账号：<input id="phone" type="text" placeholder="请输入账号" style="width: 30%"/>
+    <br />
+    <br />
+    <br />
+    所属组号：<input id="groupid" type="text" placeholder="请输入组号" style="width: 30%"/>
+    <br />
+    <br />
+    <br />
+    <label>成员类型：</label>
+    <select id="type">
+    <option value="1" selected="selected">项目经理</option>
+    <option value="2">开发人员</option>
+</select>
+    <br />
+    <br />
+    <button style="margin-left: 30vw;" onclick=sure()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll();">取消</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code=="2") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    function sure() {
+        var role=$("#type option:selected").val();
+        var groupid=$("#groupid").val();
+        var uid=sessionStorage.getItem("uid");
+        var phone=$("#phone").val();
+        var pid=getParam("pid")
+        $.ajax({
+            url:"/department/add",
+            type:"post",
+            data:{uid:uid,role:role,groupid:groupid,pid:pid,phone:phone},
+            success:function (msg) {
+                if(msg.code==100){
+                    parent.layer.msg('添加成功', {
+                        icon: 1,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        parent.layer.closeAll();
+                        parent.location=parent.location;
+                    });
+                }else {
+                    parent.layer.msg(msg.data.tip, {
+                        icon: 2,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                }}
+        })
+    }
+</script>
+</html>

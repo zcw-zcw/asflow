@@ -1,0 +1,27 @@
+body{
+    background-image: url(http://attach.bbs.miui.com/forum/201209/14/130902c83o9fdv01zy8yj1.jpg);
+    border: 0px;
+}
+.login_form{
+    text-align: center;
+    margin-top: 200px;
+}
+
+.btn{
+    text-align: center;
+    width: 80px;
+    height: 30px;
+}
+
+.text{
+    width: 200px;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.reg{
+    margin-top: 10px;
+    cursor: pointer;
+    size: 8px;
+    color: #7fed27;
+}

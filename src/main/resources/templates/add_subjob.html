@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div>
+    <label>完成情况：</label>
+    <select id="type">
+    <option value="0" >小于50%</option>
+    <option value="2">50%</option>
+        <option value="3">75%</option>
+        <option value="4">100%</option>
+</select>
+    <br />
+    <br />
+    <br />
+    <br />
+    <label>是否上传：</label>
+    <input type="radio" name="sub" value="1">已上传 <input type="radio" name="sub" value="0">未上传
+    <br />
+    <br />
+    <button style="margin-left: 30vw;" onclick=sure()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll();">取消</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    function sure() {
+        var completion=$("#type option:selected").val();
+        var uid=sessionStorage.getItem("uid");
+        var sub=$("input[name='sub']").val();
+        var pid=parent.getParam("pid");
+            var iid=getParam("iid");
+        $.ajax({
+            url:"/job/subjob",
+            type:"post",
+            data:{uid:uid,cpt:completion,sub:sub,pid:pid,iid:iid},
+            success:function (msg) {
+                if(msg.code==100){
+                    parent.layer.msg('提交成功', {
+                        icon: 1,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        parent.layer.closeAll();
+                        parent.location=parent.location;
+                    });
+                }else {
+                    parent.layer.msg(msg.data.tip, {
+                        icon: 2,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                }}
+        })
+    }
+</script>
+</html>

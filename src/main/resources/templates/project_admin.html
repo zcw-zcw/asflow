@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>项目</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
+		<link href="/css/project.css" rel="stylesheet" />
+	</head>
+	<body><div id="v_project">
+		<ul class="layui-nav">
+			<li class="layui-nav-item top_title">
+
+					<a style="font-size: 3.5vw!important;letter-spacing: 1vw; color: white;cursor: pointer;" href="index" >欢迎进入AS软件开发全流程管理平台</a>
+			</li>
+
+
+			<!-- <li class="layui-nav-item">
+		  <a href="">个人中心<span class="layui-badge-dot"></span></a>
+		</li> -->
+			<li class="layui-nav-item" lay-unselect="" style="float: right;margin-right: 2vw;">
+				<a href="javascript:;">
+					<!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎:{{uname}}</a>
+				<dl class="layui-nav-child">
+					<dd><a style="cursor: pointer;" onclick=creat()>创建项目</a></dd>
+					<dd><a style="cursor: pointer;" onclick=xinxi()>修改信息</a></dd>
+					<dd><a style="cursor: pointer;" onclick=mail()>发邮件</a></dd>
+					<!-- <dd><a href="javascript:;">安全管理</a></dd> -->
+					<dd><a style="cursor: pointer;" onclick=layout()>退出</a></dd>
+				</dl>
+			</li>
+			<li class="layui-nav-item" style="float: right;">
+
+				<a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
+			</li>
+		</ul>
+		<div class="one">
+			<p>{{pname}}项目</p>
+		</div>
+		<!-- 		<br/> -->
+
+		<div class="three">
+			<ul class="site-doc-icon site-doc-anim">
+				<li @click=turn(1) >
+					<div class="layui-anim " data-anim="layui-anim-scale" style="background-color: lightgray">需求分析</div>
+					<!-- <div class="code">layui-anim-up</div> -->
+				</li>
+				<li  @click=turn(2)>
+					<div class="layui-anim" data-anim="layui-anim-scale" style="background-color: gray">概要设计</div>
+					<!-- <div class="code">layui-anim-upbit</div> -->
+				</li>
+				<li @click=turn(3)>
+					<div class="layui-anim" data-anim="layui-anim-scale" style="background-color: yellowgreen">详细设计</div>
+					<!-- <div class="code">layui-anim-scale</div> -->
+				</li>
+				<li @click=turn(4)>
+					<div class="layui-anim" data-anim="layui-anim-scaleSpring" style="background-color: dodgerblue">编码</div>
+					<!-- <div class="code">layui-anim-scaleSpring</div> -->
+				</li>
+				<li @click=turn(5)>
+					<div class="layui-anim" data-anim="layui-anim-scale" style="background-color: red">测试</div>
+					<!-- <div class="code">layui-anim-scale</div> -->
+				</li>
+			</ul>
+		</div>
+		<div class="two">
+
+
+
+
+			<div class="layui-progress layui-progress-big ">
+				<div class="layui-progress-bar layui-bg-green" v-bind:lay-percent=stage*20+"%"></div>
+			</div>
+		</div>
+		<div class="four">
+			<p style="text-align: center; font-size: 20px;margin-bottom: 2vh;">项目组成员</p><button  class="layui-btn layui-btn-normal" style="text-align: center; display: inline" onclick=addUser()>添加成员</button>
+			<table class="layui-hide" id="test" lay-filter="test"></table>
+			<p style="text-align: center;font-size: 30px" id="tip"></p>
+		</div>
+	</div>
+	</body>
+	<script src="/lib/jquery-3.4.1.min.js"></script>
+	<script src="/lib/layui/layui.js" charset="utf-8"></script>
+	<script src="/lib/layer/layer.js"></script>
+	<script src="/js/common.js"></script>
+	<script src="/lib/vue.js"></script>
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="change">改变成员</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除成员</a>
+	</script>
+	<script>
+		$.ajax({
+			url:"project/join",
+			type:"get",
+			data:{id:getParam("pid"),uid:sessionStorage.getItem("uid")},
+			success:function (msg) {
+				if (msg.code==200) {
+					alert(msg.data.tip);
+				}else {
+					if (msg.data.code!="0") {
+						alert("无权访问");
+						location="/index";
+					}
+				}
+			}
+		})
+		$.ajax({
+			url:"/mail/getnum",
+			type:"get",
+			data:{id:sessionStorage.getItem("uid")},
+			success:function (msg) {
+				sessionStorage.setItem("num",msg.data.tip);
+			}
+		});
+		var v_project=new Vue({
+			el: '#v_project',
+			data: {
+				uname: "",
+				pname:"",
+				stage:"",
+				location:["demand","model_list","interface_list","code_list","interfacetest","demandtest"],
+				people:{},
+				num:sessionStorage.getItem("num")
+			},
+			beforeCreate:function (){
+				var pid=getParam("pid");
+				$.ajax({
+					url:"/project/getpro",
+					type:"get",
+					data:{pid:pid,uid:sessionStorage.getItem("uid")},
+					success:function (msg) {
+						if (msg.code=="200"){
+							alert(msg.data.tip);
+							window.history.go(-1);
+						}else{
+							v_project.pname=msg.data.project.name;
+							v_project.stage=msg.data.project.stage;
+						}
+
+					}
+				});
+
+			},
+			methods:{
+				 turn:function(stage){
+
+				if(stage<=v_project.stage){
+					location="/"+v_project.location[stage-1]+"?pid="+pid;
+				}else {
+					alert("未到达当前阶段！");
+				}
+		},
+			}
+
+		});
+		if(sessionStorage.getItem("uid")==''||sessionStorage.getItem("uid")==null){
+			location="/login";
+		}else {
+			v_project.uname=sessionStorage.getItem("name");
+		}
+
+
+		layui.use([], function() {
+			var $ = layui.jquery;
+			//演示动画开始
+			$('.site-doc-icon .layui-anim').on('click', function() {
+				var othis = $(this),
+					anim = othis.data('anim');
+
+				//停止循环
+				if (othis.hasClass('layui-anim-loop')) {
+					return othis.removeClass(anim);
+				}
+				othis.removeClass(anim);
+				setTimeout(function() {
+					othis.addClass(anim);
+				});
+				//恢复渐隐
+				if (anim === 'layui-anim-fadeout') {
+					setTimeout(function() {
+						othis.removeClass(anim);
+					}, 1300);
+				}
+			});
+			//演示动画结束
+		});
+		function warn(){
+			alert("还未进行到当前阶段！");
+		}
+		var pid=getParam("pid");
+		layui.use('table', function(){
+			var table = layui.table;
+			table.render({
+				elem: '#test'
+				,url:'/department/getUser'
+				,title: '成员表'
+				,where:{
+					uid: sessionStorage.getItem("uid"),
+					pid:pid
+				}
+				// ,width:'1200'
+				,cols: [
+					[
+						// ,{field:'id', title:'ID', width:45,  unresize: true}
+						{field:'name', title:'成员名', width:400}
+						,{field:'groupid', title:'组编号', width:250}
+						,{field:'role', title:'职位', width:250 ,templet:function (dpt) {
+							if(dpt.role==1){
+								return '项目经理';
+							}else {
+								return '开发人员';
+							}
+						}}
+						// ,{field:'url', title:'点击查看', width:350, templet: function(arts){
+						//         return '<a href= '+ arts.url +'>'+ arts.url.split("/")[2] +'</a>'
+						//     }}
+						,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
+
+					]
+				]
+				,page: true
+			});
+			table.on('tool(test)', function(obj){
+				var data = obj.data;
+				//console.log(obj)
+				if(obj.event === 'change'){
+					changeUser(obj.data.uid);
+
+				}else if(obj.event==='delete'){
+					layer.confirm('确认删除该成员', function(index){
+						deleteUser(obj.data.uid);
+						layer.close(index);
+						// location=location;
+					});}
+			});
+		});
+		function changeUser(uid) {
+			layer.open({
+				title: '改变成员',
+				closeBtn: 1,
+				shadeClose: true,
+				type: 2,
+				area: ['300px', '200px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: '/add_changeUser?'+uid,
+
+			});
+
+		}
+		function deleteUser(uid) {
+			$.ajax({
+				url:"/department/deleteUser",
+				type:"post",
+				data:{uid:uid,id:sessionStorage.getItem("uid"),pid:pid},
+				success:function (msg) {
+					if(msg.code==200){
+						alert(msg.data.tip);
+					}else {
+						layer.msg('删除成功', {
+							icon: 1,
+							time: 2000 //2秒关闭（如果不配置，默认是3秒）,
+
+						},function () {
+							location=location;
+						});
+
+					}
+				}
+			})
+		}
+		function addUser() {
+			layer.open({
+				title: '发送邮件',
+				closeBtn: 1,
+				shadeClose: true,
+				type: 2,
+				area: ['250px', '250px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: '/add_Department?pid='+getParam("pid"),
+
+			});
+		}
+	</script>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swpu.asflow.mapper.DemandMapper">
+    <select id="getDemand" resultType="com.swpu.asflow.entity.DmdTable" parameterType="list">
+        select d.uid,d.pid,d.title,d.content ,d.time,d.flag,u.name from users u join demand d where d.uid=u.id and d.id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by d.time
+    </select>
+</mapper>

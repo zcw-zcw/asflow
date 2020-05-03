@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="/css/reg.css" rel='stylesheet' type='text/css'/>
+	</head>
+	<body>
+	<div class="login-form">
+		<form class="login_form">
+			<p>立即注册</p>
+			<input type="text" id="account" class="text" placeholder="请输入手机" onfocus="this.value = '';"
+			>
+			<br/>
+			<input type="password" id="pwd" class="text" placeholder="请输入密码" onfocus="this.value = '';"
+			>
+			<br/>
+			<input type="text" id="name" class="text" placeholder="请输入姓名" onfocus="this.value = '';"
+			>
+			<br/>
+			<input type="text" id="mail" class="text" placeholder="请输入邮箱号" onfocus="this.value = '';" onkeydown=enterreg()>
+			<br/>
+<!--			<label class="label" >用户类型</label>-->
+<!--			<select id="type">-->
+<!--				<option value="1" selected="selected">作者</option>-->
+<!--				<option value="0">专家</option>-->
+<!--			</select>-->
+<!--			<br/>-->
+			<input type="button" onclick="reg()" value="注册" class="btn">
+
+		</form>
+
+	</div>
+	</body>
+	<script src="/lib/jquery-3.4.1.min.js"></script>
+	<script src="/lib/jquery.md5.js"></script>
+<script>
+	function reg() {
+		var ac=$("#account").val();
+		var pwd=$("#pwd").val();
+		var name=$("#name").val();
+		var mail=$("#mail").val();
+		if(ac!=''&&pwd!=''&&name!=''&&mail!=''){
+			$.ajax({
+				type:"POST",
+				url:"/users/register",
+				data:{"phone":ac,"password":$.md5(pwd),"name":name,"mail":mail},
+				dataType:"json",
+				success:function (res) {
+					if(res.code===100){
+						alert("注册成功");
+						parent.layer.closeAll();
+					}else if(res.code===200){
+						alert("注册失败");
+					}
+				},
+				error:function (e) {
+					console.log(e);
+				}
+			});
+		}else {
+			alert("请输入全部信息");
+		}
+	}
+	function enterreg() {
+		var event = window.event || arguments.callee.caller.arguments[0];
+		if (event.keyCode == 13)
+		{
+			reg();
+		}
+	}
+</script>
+</html>

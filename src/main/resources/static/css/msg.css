@@ -1,0 +1,16 @@
+.top_title{
+	margin-left: 1vw;
+
+}
+
+.one{
+	font-size: 3vw;
+	text-align: center;
+}
+.one td{
+	border: 1px solid black;
+}
+.two{
+	margin-left: 80px;
+	margin-right: 80px;
+}

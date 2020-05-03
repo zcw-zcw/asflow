@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>消息</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
+		<link href="/css/msg.css" rel="stylesheet" />
+	</head>
+	<body>
+	<div id="v_msg">
+		<ul class="layui-nav">
+			<li class="layui-nav-item top_title">
+		
+					<a style="font-size: 3.5vw!important;letter-spacing: 1vw; color: white;cursor: pointer;" href="index" >欢迎进入AS软件开发全流程管理平台</a>
+			</li>
+		
+		
+			<!-- <li class="layui-nav-item">
+		  <a href="">个人中心<span class="layui-badge-dot"></span></a>
+		</li> -->
+			<li class="layui-nav-item" lay-unselect="" style="float: right;margin-right: 2vw;">
+				<a href="javascript:;">
+					<!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎:{{uname}}</a>
+				<dl class="layui-nav-child">
+					<dd><a style="cursor: pointer;" onclick=creat()>创建项目</a></dd>
+					<dd><a style="cursor: pointer;" onclick=xinxi()>修改信息</a></dd>
+					<dd><a style="cursor: pointer;" onclick=mail()>发邮件</a></dd>
+					<!-- <dd><a href="javascript:;">安全管理</a></dd> -->
+					<dd><a style="cursor: pointer;" onclick=layout()>退出</a></dd>
+				</dl>
+			</li>
+			<li class="layui-nav-item" style="float: right;">
+
+				<a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
+			</li>
+		</ul>
+				<div class="two">
+			<table class="layui-hide" id="test" lay-filter="test"></table>
+		</div>
+	</div>
+	</body>
+		<script src="lib/jquery-3.4.1.min.js"></script>
+	<script src="lib/layui/layui.js" charset="utf-8"></script>
+	<script src="lib/layer/layer.js"></script>
+	<script src="js/common.js"></script>
+	<script src="/lib/vue.js"></script>
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="read">已读</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	<script>
+		$.ajax({
+			url:"/mail/getnum",
+			type:"get",
+			data:{id:sessionStorage.getItem("uid")},
+			success:function (msg) {
+				sessionStorage.setItem("num",msg.data.tip);
+			}
+		});
+		var v_msg=new Vue({
+			el: '#v_msg',
+			data: {
+				uname: sessionStorage.getItem("name"),
+
+				num:sessionStorage.getItem("num")
+			},});
+		  layui.use('table', function(){
+		    var table = layui.table;
+		    table.render({
+		        elem: '#test'
+		        ,url:'/mail/init'
+		        ,title: '用户数据表'
+				,where:{id:sessionStorage.getItem("uid")}
+		        // ,width:'1200'
+		        ,cols: [
+		        		[
+		            // ,{field:'id', title:'ID', width:45,  unresize: true}
+		            {field:'title', title:'标题', width:200}
+		            ,{field:'cont', title:'内容', width:550}
+					,{field:'time', title:'发件时间', width:150}
+		            ,{field:'name', title:'发件人', width:150 }
+		            // ,{field:'url', title:'点击查看', width:350, templet: function(arts){
+		            //         return '<a href= '+ arts.url +'>'+ arts.url.split("/")[2] +'</a>'
+		            //     }}
+							,{field:'flag', title:'状态', width:80 ,templet:function (pro) {
+								if(pro.flag==1){
+									return '已读';
+								}else {
+									return '未读';
+								}
+							}}
+		            ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
+		
+		        ]
+				]
+		        ,page: true
+		    });
+			table.on('tool(test)', function(obj){
+		        var data = obj.data;
+		        //console.log(obj)
+		        if(obj.event === 'read'){
+		            layer.confirm('确认已读', function(index){
+		                // obj.del();
+		                read(obj.data.id);
+		                // layer.close(index);
+					// location="x";
+		            });
+		        }else if(obj.event==='del'){
+		            layer.confirm('确认删除', function(index){
+		                obj.del();
+		                del(obj.data.id);
+		                layer.close(index);
+		        });}
+		    });
+		});
+		  function read(id) {
+			$.ajax({
+				url:"/mail/read",
+				type:"post",
+				data:{id:id},
+				success:function(msg) {
+				  if(msg.code==100){
+				  	layer.msg("成功",{icon:1,time:2000},function () {
+						parent.location=parent.location;
+					})
+				  }else {
+					  layer.msg("失败",{icon:2,time:2000},function () {
+						  parent.layer.closeAll();
+					  });
+				  }
+				}
+			})
+		  }
+		  function del(id) {
+			  $.ajax({
+				  url:"/mail/del",
+				  type:"post",
+				  data:{id:id},
+				  success:function(msg) {
+					  if(msg.code==100){
+						  layer.msg("成功",{icon:1,time:2000},function () {
+							  parent.location=parent.location;
+						  });
+					  }else {
+						  layer.msg("失败",{icon:2,time:2000},function () {
+							  parent.layer.closeAll();
+						  });
+					  }
+				  }
+			  })
+		  }
+	</script>
+</html>

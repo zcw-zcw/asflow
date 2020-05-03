@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table style="width: 60%;margin: 0 auto" class="layui-hide" id="test" lay-filter="test"></table>
+</body>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">打回任务</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check">查看结果</a>
+</script>
+<script>
+    var  uid=sessionStorage.getItem("uid");
+    if (uid==null||uid==""){
+        parent.layer.msg("请先登录",{
+            icon:2,
+            time:2000
+        },function() {
+            parent.layer.closeAll();
+        })
+    } else{
+        layui.use('table', function(){
+            var table = layui.table;
+            table.render({
+                elem: '#test'
+                ,url:'/job/gettestjob'
+                ,title: '需求表'
+                ,where:{
+                    uid:uid,
+                    pid:parent.getParam("pid")
+                }
+                // ,width:'1200'
+                ,cols: [
+                    [
+                        // ,{field:'id', title:'ID', width:45,  unresize: true}
+                        {field:'creatTime', title:'创建时间', width:200}
+                        ,{field:'uname', title:'接收人', width:200}
+
+                        // ,{field:'url', title:'点击查看', width:350, templet: function(arts){
+                        //         return '<a href= '+ arts.url +'>'+ arts.url.split("/")[2] +'</a>'
+                        //     }}
+                        ,{field:'iname', title:'任务接口名', width:200}
+                        ,{field:'finalTime', title:'规定完成时间', width:200}
+                        ,{field:'flag', title:'状态',templet:function (dpt) {
+                            if(dpt.flag==0){
+                                return '未提交';
+                            }else if(dpt.flag==1){
+                                return '提交但未完成';
+                            }else if(dpt.flag==2){
+                                return '已提交';
+                            }else if(dpt.flag==3){
+                                return '被打回';
+                            }else {
+                                return "再次提交";
+                            }
+                        }} ,{field:'completion', title:'完成百分比', width:100,templet:function (dpt) {
+                            if(dpt.completion==0){
+                                return '小于50%';
+                            }else if(dpt.completion==2){
+                                return '50%';
+                            }else if(dpt.completion==3){
+                                return '75%';
+                            }else if(dpt.completion==4){
+                                return '100%';
+                            }else {
+                                return "";
+                            }
+                        }}
+                        ,{field:'type', title:'任务类型', width:100,templet:function (dpt) {
+                if(dpt.type==3){
+                    return '需求测试';
+                }else if(dpt.type==2){
+                    return '接口测试';
+                }}}
+                        ,{fixed: '', title:'操作', toolbar: '#barDemo'}
+                    ]
+                ]
+                ,page: true
+            });
+            table.on('tool(test)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'refuse'){
+                    parent.layer.confirm("确认打回",function (index) {
+                        $.ajax({
+                            url:"/job/reftestjob",
+                            data:{id:obj.data.id},
+                            type:"post",
+                            success:function (msg) {
+                                if (msg.code==100){
+                                    parent.layer.msg("打回成功",{icon:1,time:2000},function () {
+                                        layer.closeAll();
+                                        location=location;
+                                    })
+                                }
+                            }
+                        })
+                    })}else if(obj.event==="check"){
+                    layer.open({
+                        title: '查看截图',
+                        closeBtn: 1,
+                        shadeClose: true,
+                        type: 2,
+                        area: ['800px', '600px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '/searchphoto?iid='+obj.data.iid+"&type="+obj.data.type+"&did="+obj.data.did,
+
+                    });
+                }
+
+
+
+            });});}
+</script>
+</html>

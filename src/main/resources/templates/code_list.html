@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
+    <link href="/css/model_list.css" rel="stylesheet" />
+</head>
+<style>
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body>
+<div id="v_code">
+    <ul class="layui-nav">
+        <li class="layui-nav-item top_title">
+
+            <a style="font-size: 3.5vw!important;letter-spacing: 1vw; color: white;cursor: pointer;" href="index">欢迎进入AS软件开发全流程管理平台</a>
+        </li>
+
+
+        <!-- <li class="layui-nav-item">
+      <a href="">个人中心<span class="layui-badge-dot"></span></a>
+    </li> -->
+        <li class="layui-nav-item" lay-unselect="" style="float: right;margin-right: 2vw;">
+            <a href="javascript:;">
+                <!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎:{{uname}}</a>
+            <dl class="layui-nav-child">
+                <dd><a style="cursor: pointer;" onclick=creat()>创建项目</a></dd>
+                <dd><a style="cursor: pointer;" onclick=xinxi()>修改信息</a></dd>
+                <dd><a style="cursor: pointer;" onclick=mail()>发邮件</a></dd>
+                <!-- <dd><a href="javascript:;">安全管理</a></dd> -->
+                <dd><a style="cursor: pointer;" onclick=layout()>退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item" style="float: right;">
+
+            <a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
+        </li>
+    </ul>
+    <div><span style="margin: 20px;font-size: 20px;color:red">当前阶段：编码</span>
+        <button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看接口文档</button></div>
+    <button style="float: right;font-size: 20px" onclick=searchJob()>查看已发布的任务</button>
+    <div class="one">
+        <p>我的接口</p>
+
+        <table style="width: 60%;margin: 0 auto" class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
+
+    <button onclick=toCode() class="layui-btn" style="float: right;margin-right: 20px;">进入下一阶段</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script src="/lib/vue.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="code">发布编码任务</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">完成编码</a>
+</script>
+<script>
+    if (!check(4)){
+        $(".layui-btn").css("background-color","grey");
+        $(".layui-btn").css("cursor","not-allowed");
+        $(".layui-btn").attr("disabled","disabled");
+    }
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code!="0") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    function showpdf() {
+        layer.open({
+            title: '需求文档',
+            closeBtn: 1,
+            shadeClose: true,
+            type: 2,
+            area: ['800px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/add_showpdf?pid='+getParam("pid")+"&stage=3",
+
+        });
+    }
+    $.ajax({
+        url:"/mail/getnum",
+        type:"get",
+        data:{id:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            sessionStorage.setItem("num",msg.data.tip);
+        }
+    });
+    var v_code=new Vue({
+        el: '#v_code',
+        data: {
+            data1:[],
+            uname: sessionStorage.getItem("name"),
+            num:sessionStorage.getItem("num")
+        },
+        beforeCreate:function () {
+
+
+        },
+        methods: {
+
+        },})
+    layui.use('table', function(){
+        var table = layui.table;
+        table.render({
+            elem: '#test'
+            ,url:'/interface/getallint'
+            ,title: '接口表'
+            ,where:{
+                pid:getParam("pid")
+            }
+            // ,width:'1200'
+            ,cols: [
+                [  {field:'title', title:'接口名', width:150},{field:'parameter',width:300, title:'接口参数',templet:function (dpt) {
+                        var data=[];
+                        data=dpt.parameter.split(",");
+                        var a="";
+                        for (var i=0 ;i<data.length;i++){
+                            a+=data[i]+"<br>"
+                        }
+                        return a;
+                    }},
+                    {field:'returnss', title:'返回结果', width:300}
+                    ,{field:'time', title:'创建时间', width:180}
+                    ,{field:'disc', title:'接口描述', width:200}
+                    ,{field:'flag', title:'接口状态', width:200,templet:function (dpt) {
+                    if(dpt.flag==0){
+                        return "未编码";
+                    }else {
+                        return '已编码';
+                    }
+                    }
+                }
+                    ,{fixed: '', title:'操作', toolbar: '#barDemo'}
+                ]
+            ]
+            ,page: true
+        });table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'code'){ if(check(4)){
+                layer.open({
+                    title: '下发任务',
+                    closeBtn: 1,
+                    shadeClose: true,
+                    type: 2,
+                    area: ['500px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/add_job?iid='+obj.data.id,
+
+                });}}else if(obj.event==='fin'){ if(check(4)){
+                layer.confirm("确认完成接口编码",function (index) {
+                    $.ajax({
+                        url:"/interface/finint",
+                        data:{id:obj.data.id},
+                        type:"post",
+                        success:function (msg) {
+                            if (msg.code===100){
+                                parent.layer.msg("完成接口编码",{icon:1,time:2000},function () {
+                                    parent.layer.closeAll();
+                                    parent.location=parent.location;
+                                })
+                            }
+                        }
+                    })
+                })}
+            }
+
+
+
+        });
+    })
+    function ifdo(mid) {
+        var type;
+        $.ajax({
+            url:"/interface/ifdo",
+            type:"get",
+            async: false,
+            data:{mid:mid},
+            success:function (msg) {
+                type=msg.data.tip>0?false:true;
+            }
+
+        });
+        return type;
+    }
+    function toCode() {
+        layer.open({
+            title: '确认进入下一阶段',
+            closeBtn: 1,
+            shadeClose: true,
+            type: 2,
+            area: ['300px', '200px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/toTest',
+
+        });
+    }
+
+    function searchJob() {
+        layer.open({
+            title: '我发布的任务',
+            closeBtn: 1,
+            shadeClose: true,
+            type: 2,
+            area: ['1400px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/searchJob',
+
+        });
+    }
+</script>
+</html>

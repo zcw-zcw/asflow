@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+	</head>
+	<body>
+		<div>
+			<br />
+			
+		项目名：&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="name" placeholder="请输入项目名"/>
+		<br />
+		<br />
+		<br />
+		<label>项目描述：</label><textarea rows="5" cols="30" style="vertical-align:top" placeholder="请输入项目描述" id="desc"></textarea>
+		<br />
+		<br />
+		<button style="margin-left: 30vw;" onclick=addProject()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll();">取消</button>
+		</div>
+	</body>
+	<script src="/lib/layui/layui.js" charset="utf-8"></script>
+	<script src="/lib/jquery-3.4.1.min.js"></script>
+	<script src="/lib/layer/layer.js"></script>
+<script>
+function	addProject(){
+	var name=$("#name").val();
+	var desc=$("#desc").val();
+	$.ajax({
+		url:"project/set",
+		data:{
+			name:name,
+			desc:desc,
+			uid:sessionStorage.getItem("uid")
+		},
+		type:"post",
+		success:function (msg) {
+			if(msg.code=="100"){
+				parent.layer.msg('添加成功', {
+					icon: 1,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				}, function(){
+					parent.layer.closeAll();
+					parent.location=parent.location;
+				});
+			}else {
+				parent.layer.msg(msg.data.tip, {
+					icon: 1,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				}, function(){
+					parent.layer.closeAll();
+					parent.location=parent.location;
+				});
+			}
+		}
+	})
+}
+</script>
+</html>

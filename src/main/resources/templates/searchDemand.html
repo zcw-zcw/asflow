@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table style="width: 60%;margin: 0 auto" class="layui-hide" id="test" lay-filter="test"></table>
+</body>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code=="2") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    var  list=getParam("list");
+    if (list==null||list==""){
+        parent.layer.msg("请选择项目",{
+            icon:2,
+            time:2000
+        },function() {
+            parent.layer.closeAll();
+        })
+    } else{
+    layui.use('table', function(){
+        var table = layui.table;
+        table.render({
+            elem: '#test'
+            ,url:'/demand/getDemand'
+            ,title: '需求表'
+            ,where:{
+                list:list
+            }
+            // ,width:'1200'
+            ,cols: [
+                [
+                    // ,{field:'id', title:'ID', width:45,  unresize: true}
+                    {field:'title', title:'需求名', width:200}
+                    ,{field:'content', title:'详情', width:750}
+
+                    // ,{field:'url', title:'点击查看', width:350, templet: function(arts){
+                    //         return '<a href= '+ arts.url +'>'+ arts.url.split("/")[2] +'</a>'
+                    //     }}
+                    ,{field:'time', title:'创建时间', width:200}
+                    ,{field:'name', title:'创建人', width:200}
+                    ,{field:'flag', title:'状态',templet:function (dpt) {
+                        if(dpt.flag==0){
+                            return '待定';
+                        }else {
+                            return '确定';
+                        }
+                    }}
+
+                ]
+            ]
+            ,page: true
+        });});}
+</script>
+</html>

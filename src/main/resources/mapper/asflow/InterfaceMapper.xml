@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swpu.asflow.mapper.InterfaceMapper">
+    <select id="list" resultType="com.swpu.asflow.entity.Ifstable" >
+       SELECT d.title AS dname,m.id as mid,m.title AS mname,m.content AS mdis ,m.time,u.name as uname FROM demand d JOIN model m ON m.did=d.id AND d.pid=#{pid} JOIN users u ON u.id=m.uid
+    </select>
+    <select id="getallint" resultType="com.swpu.asflow.entity.Interface" parameterType="long">
+        select i.* from interface i join model m on  m.id=i.mid join demand d on  m.did=d.id and d.pid=#{pid}
+    </select>
+    <select id="getint" resultType="com.swpu.asflow.entity.Interface" parameterType="long">
+        select i.* from interface i join model m on  m.id=i.mid join demand d on  m.did=d.id and d.pid=#{pid}
+    </select>
+</mapper>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div>
+    接口描述:<input id="title" type="text" placeholder="请输入接口名" style="width: 60%"/>
+    <br />
+    <br />
+    <br />
+    接口描述:<input id="dis" type="text" placeholder="请输入接口描述" style="width: 60%"/>
+    <br />
+    <br />
+    <br />
+    参数类型：<input id="vir1" type="text" placeholder="请输入参数类型" style="width: 20%"/>
+    参数名：<input id="name1" type="text" placeholder="请输入参数名" style="width: 20%"/>
+    参数描述：<input id="dis1" type="text" placeholder="请输入参数描述" style="width: 30%"/>
+    <br />
+    <br />
+    <div id="filesDiv"></div>
+    <button style="float: right;margin: 20px" onclick="addFile(document.getElementById('filesDiv').innerHTML)">添加接口参数</button>
+    <br />
+    <br />
+    <br />
+    返回类型：<input id="vir0" type="text" placeholder="请输入参数类型" style="width: 20%"/>
+    返回名：<input id="name0" type="text" placeholder="请输入参数名" style="width: 20%"/>
+    返回描述：<input id="dis0"  type="text" placeholder="请输入参数描述" style="width: 19%" />
+
+    <br />
+    <br />
+    <button style="margin-left: 30vw;" onclick=addint()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll();">取消</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code=="2") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    var i =2;
+    function addFile(param){
+        param += "参数类型：<input id=\'vir"+i+"'"+" type=\'text' placeholder=\'请输入参数类型' style=\'width: 20%'/>"
+        +"  参数名："
+    +"<input id=\'name"+i+"'"+" type=\'text' placeholder=\'请输入参数名' style=\'width: 20%'/>"
+        +"  参数描述："
+            +"<input id=\'dis"+i+"'"+" type=\'text' placeholder=\'请输入参数描述' style=\'width: 30%'/>"
+            +"<br />"
+            +"<br />";
+        document.getElementById("filesDiv").innerHTML = param;
+        i=i+1;
+    }
+   function addint() {
+        var param=[];
+        var disc=$("#dis").val();
+        var title=$("#title").val();
+       for( var j=1; j< i;j++){
+
+           var vir=$("#vir"+j).val();
+           var name=$("#name"+j).val();
+           var dis=$("#dis"+j).val();
+           param.push("{'参数类型':"+vir+"-'参数名':"+name+"-'参数描述':"+dis+"}");
+       }
+       var vir=$("#vir0").val();
+       var name=$("#name0").val();
+       var dis=$("#dis0").val();
+       var returnss="{'返回类型':"+vir+"-'返回名':"+name+"-'返回描述':"+dis+"}";
+       $.ajax({
+           url:"/interface/addint",
+           type:"get",
+           data:{param:param,returnss:returnss,uid:sessionStorage.getItem("uid"),mid:getParam("mid"),disc:disc,title:title},
+dataType:"json",
+           success:function (msg) {
+               if(msg.code==100){
+                   parent.layer.msg("添加成功",{icon:1,time:2000},function () {
+                       parent.layer.closeAll();
+                       parent.location=parent.location;
+                   })
+               }else {
+                   parent.layer.msg("添加失败",{icon:2,time:2000})
+               }
+           }
+       })
+   }
+</script>
+</html>

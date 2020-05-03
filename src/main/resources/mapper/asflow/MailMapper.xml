@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swpu.asflow.mapper.MailMapper">
+    <select id="getMail" resultType="com.swpu.asflow.entity.MailTable" parameterType="long">
+        select m.flag,m.id,m.title,m.time,m.sentid,m.cont,u.name from mail m join users u where u.id=#{id} and u.id=m.getid order by m.time
+    </select>
+</mapper>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div>
+    <br />
+
+    打回原因：<input id="title" type="text" placeholder="请输入打回原因"/>
+    <br />
+    <br />
+    <br />
+
+    <button style="margin-left: 30vw;" onclick=sub()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll()">取消</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script>
+
+    function sub() {
+        var title=$("#title").val();
+
+        if(title==""||title==null){
+            layer.msg('信息不完整', {
+                icon: 1,
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            });
+        }else {
+            $.ajax({
+                url:"/demand/addDemand",
+                type:"post",
+                data:{uid:sessionStorage.getItem("uid"),title:title,content:content,pid:location.search.split("=")[1]},
+                success:function (msg) {
+                    if(msg.code==200){
+                        parent.layer.msg('添加失败', {
+                            icon: 1,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }else{
+                        parent.layer.msg('添加成功', {
+                            icon: 1,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        },function () {
+                            parent.location=parent.location;
+                        });
+                    }
+
+                }
+            })
+        }
+    }
+</script>
+</html>

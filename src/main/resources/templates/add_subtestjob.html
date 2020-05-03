@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div>
+    <label>完成情况：</label>
+    <select id="type">
+    <option value="0" >小于50%</option>
+    <option value="2">50%</option>
+        <option value="3">75%</option>
+        <option value="4">100%</option>
+</select>
+    <br />
+    <br />
+    <br />
+    <p>
+        <span>描述：</span>
+        <input type="text" name="" id="dis" value="">
+    </p>
+    <br />
+    <br />
+    <br />
+    <p>
+        <span>测试截图：</span>
+        <input type="file" name="" id="choose-file" multiple="multiple">
+        <!--<input type="file" name="" id="choose-file" />-->
+    </p>
+    <ul class="file-list ">
+
+    </ul>
+    <br />
+
+    <br />
+    <br />
+    <button style="margin-left: 30vw;" id="upload" >确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll();">取消</button>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+
+    $(function () {
+
+        var $button = $('#upload'),
+            //选择文件按钮
+            $file = $("#choose-file"),
+            //回显的列表
+            $list = $('.file-list'),
+            //选择要上传的所有文件
+            fileList = [];
+        //当前选择上传的文件
+        var curFile;
+        // 选择按钮change事件，实例化fileReader,调它的readAsDataURL并把原生File对象传给它，
+        // 监听它的onload事件，load完读取的结果就在它的result属性里了。它是一个base64格式的，可直接赋值给一个img的src.
+        $file.on('change', function (e) {
+            //上传过图片后再次上传时限值数量
+            var numold = $('li').length;
+            if(numold >= 6){
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //限制单次批量上传的数量
+            var num = e.target.files.length;
+            var numall = numold + num;
+            if(num >6 ){
+                layer.alert('最多上传6张图片');
+                return;
+            }else if(numall > 6){
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //原生的文件对象，相当于$file.get(0).files;//files[0]为第一张图片的信息;
+            curFile = this.files;
+            //curFile = $file.get(0).files;
+            //console.log(curFile);
+            //将FileList对象变成数组
+            fileList = fileList.concat(Array.from(curFile));
+            //console.log(fileList);
+            for (var i = 0, len = curFile.length; i < len; i++) {
+                reviewFile(curFile[i])
+            }
+            $('.file-list').fadeIn(2500);
+        })
+
+
+        function reviewFile(file) {
+            //实例化fileReader,
+            var fd = new FileReader();
+            //获取当前选择文件的类型
+            var fileType = file.type;
+            //调它的readAsDataURL并把原生File对象传给它，
+            fd.readAsDataURL(file);//base64
+            //监听它的onload事件，load完读取的结果就在它的result属性里了
+            fd.onload = function () {
+                if (/^image\/[jpeg|png|jpg|gif]/.test(fileType)) {
+                    $list.append('<li style="border:solid red px; margin:5px 5px;" class="file-item"><img src="' + this.result + '" alt="" height="70"><span class="file-del">删除</span></li>').children(':last').hide().fadeIn(2500);
+                } else {
+                    $list.append('<li class="file-item"><span class="file-name">' + file.name + '</span><span class="file-del">删除</span></li>')
+                }
+
+            }
+        }
+
+        //点击删除按钮事件：
+        $(".file-list").on('click', '.file-del', function () {
+            let $parent = $(this).parent();
+            console.log($parent);
+            let index = $parent.index();
+            fileList.splice(index, 1);
+            $parent.fadeOut(850, function () {
+                $parent.remove()
+            });
+        });
+        //点击上传按钮事件：
+        $button.on('click', function () {
+            var completion=$("#type option:selected").val();
+            var uid=sessionStorage.getItem("uid");
+            var pid=parent.getParam("pid");
+            var iid=getParam("iid");
+            var dis=$("#dis").val();
+            if(fileList.length > 6){
+                layer.alert('最多允许上传6张图片');
+                return;
+            } else {
+                var formData = new FormData();
+                for (var i = 0, len = fileList.length; i < len; i++) {
+                    formData.append('upfile[]', fileList[i]);
+                }
+                formData.append("completion",completion);
+                formData.append("uid",uid);
+                formData.append("pid",pid);
+                formData.append("iid",iid);
+                formData.append("dis",dis);
+                formData.append("type",getParam("type"));
+                $.ajax({
+                    url: '/test/upload',
+                    type: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (msg) {
+                        if (msg.code == '100') {
+                            layer.msg(msg.data.tip, {icon: 6});
+                        } else if (msg.code == '200') {
+                            layer.msg(msg.data.tip, {icon: 1});
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+
+
+</script>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swpu.asflow.mapper.DepartmentMapper">
+<select id="getUser" resultType="com.swpu.asflow.entity.DptTable" parameterType="list">
+    select d.uid,d.pid,d.role,d.groupid ,u.name from users u join department d where d.uid=u.id and d.pid=#{pid} and d.role!=0
+<!--     and d.uid in-->
+<!--    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">-->
+<!--        #{item}-->
+<!--    </foreach>-->
+    order by d.groupid,d.role
+</select>
+    <select id="getDepart" resultType="com.swpu.asflow.entity.DptTable" >
+        select d.uid,d.pid,d.role,d.groupid ,u.name,u.phone,u.mail from users u join department d where d.uid=u.id and d.uid !=#{uid} and d.pid=#{pid}
+        order by d.role
+    </select>
+    <select id="getManager" resultType="com.swpu.asflow.entity.DptTable" parameterType="long">
+         select d.uid,d.pid,d.role,d.groupid ,u.name from users u join department d on d.uid=u.id and d.pid=#{pid} and d.role=1 order by d.groupid
+    </select>
+    <select id="getCoder" resultType="com.swpu.asflow.entity.DptTable" parameterType="long">
+         select d.uid,d.pid,d.role,d.groupid ,u.name from users u join department d on d.uid=u.id and d.pid=#{pid} and d.role=2 and groupid=(select groupid from department where uid=#{uid} and role=1 and pid=#{pid}) order by d.groupid
+    </select>
+</mapper>

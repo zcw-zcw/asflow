@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script src="/lib/vue.js"></script>
+<script>
+    var stage=getParam("stage");
+    var pid=getParam("pid");
+    if(stage==1){location.href="/pdf/"+pid+"demand.pdf"}
+else  if(stage==2){location.href="/pdf/"+pid+"model.pdf"}
+    else  if(stage==3){location.href="/pdf/"+pid+"interface.pdf"}
+</script>
+</html>
