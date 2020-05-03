@@ -43,7 +43,7 @@
             <a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
         </li>
     </ul>
-    <div><p style="margin: 20px;font-size: 20px;color:red">当前阶段：编码</p></div>
+    <div><p style="margin: 20px;font-size: 20px;color:red">当前阶段：接口测试</p></div>
     <button style="float: right;font-size: 20px" onclick=searchJob()>查看已发布的任务</button>
     <div class="one">
         <p>我的任务</p>
@@ -148,7 +148,7 @@
                     area: ['500px', '450px'],
                     fixed: false, //不固定
                     maxmin: true,
-                    content: '/add_job_manager?iid='+obj.data.iid,
+                    content: '/add_job_manager?id='+obj.data.iid+"&type=2",
 
                 });}else if(obj.event==='fin'){
                 layer.open({
@@ -210,7 +210,7 @@
             area: ['1400px', '600px'],
             fixed: false, //不固定
             maxmin: true,
-            content: '/searchJob_manager',
+            content: '/searchTestJob_manager',
 
         });
     }

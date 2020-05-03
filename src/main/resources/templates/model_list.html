@@ -63,32 +63,52 @@
 
 			</table>
 		</div>
-		<form action="/sql/upload"   id="upload1" method="post"   enctype="multipart/form-data">
+<!--		<form action="/sql/upload"   id="upload1" method="post"   enctype="multipart/form-data">-->
 			<input type="text"  hidden="hidden" name="uid" id="uid" >
 			<input type="text"  hidden="hidden" name="pid" id="pid" >
 			<label style="margin-left: 400px;">上传数据库脚本文件：</label><button class="layui-btn"><input name="upfile" id="upfile" accept="application/sql" type="file" /></button>
-		<input type="submit" value="提交">
-		</form>
+		<button onclick=subsql() class="layui-btn" >提交</button>
+<!--		</form>-->
 
 		<button onclick=toInterface() class="layui-btn" style="float: right;margin-right: 20px;">进入下一阶段</button>
 	</div>
 	</body>
 	<script src="/lib/jquery-3.4.1.min.js"></script>
-	<script src="/lib/jquery.form.js"></script>
+<!--	<script src="/lib/jquery.form.js"></script>-->
 	<script src="/lib/layui/layui.js" charset="utf-8"></script>
 	<script src="/lib/layer/layer.js"></script>
 	<script src="/js/common.js"></script>
 	<script src="/lib/vue.js"></script>
 
 	<script>
-		$(document).ready(function(){
-			$("#uid").val(sessionStorage.getItem("uid"));
-			$("#pid").val(getParam("pid"));
-		});
-		$("#upload1").ajaxForm(function () {
-			alert("111");
-			// layer.msg(ok.data.tip,{icon:1,time:2000});
-		});
+		function subsql() {
+			var formData = new FormData();
+			var uid=sessionStorage.getItem("uid");
+			var pid=parent.getParam("pid");
+			formData.append("uid",uid);
+			formData.append("pid",pid);
+			formData.append("upfile",$('#upfile').get(0).files[0]);
+			$.ajax({
+				url:"/sql/upload",
+				type:"post",
+				data:formData,
+				dataType: 'json',
+				processData: false,
+				contentType: false,
+				success:function (msg) {
+					layer.msg(msg.data.tip,{time:2000});
+				}
+			})
+		}
+
+		// $(document).ready(function(){
+		// 	$("#uid").val(sessionStorage.getItem("uid"));
+		// 	$("#pid").val(getParam("pid"));
+		// });
+		// $("#upload1").ajaxForm(function () {
+		// 	alert("111");
+		// 	// layer.msg(ok.data.tip,{icon:1,time:2000});
+		// });
 		$.ajax({
 			url:"project/join",
 			type:"get",

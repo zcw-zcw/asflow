@@ -182,4 +182,20 @@ public class UIController {
     public String demandtestcxy(){
         return "demandtestcxy.html";
     }
+    @RequestMapping("toDemandTest")
+    public String toDemandTest(){
+        return "toDemandTest.html";
+    }
+    @RequestMapping("searchTestJob_manager")
+    public String searchTestJob_manager(){
+        return "searchTestJob_manager.html";
+    }
+    @RequestMapping("searchDemandTestJob_manager")
+    public String searchDemandTestJob_manager(){
+        return "searchDemandTestJob_manager.html";
+    }
+    @RequestMapping("add_test_job_manager")
+    public String add_test_job_manager(){
+        return "add_test_job_manager.html";
+    }
 }

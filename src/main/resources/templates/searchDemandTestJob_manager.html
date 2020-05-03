@@ -32,7 +32,7 @@
             var table = layui.table;
             table.render({
                 elem: '#test'
-                ,url:'/job/getmanagertocoderjob'
+                ,url:'/job/getmanagertocoderdemandtestjob'
                 ,title: '任务表'
                 ,where:{
                     uid:uid,
@@ -48,7 +48,7 @@
                         // ,{field:'url', title:'点击查看', width:350, templet: function(arts){
                         //         return '<a href= '+ arts.url +'>'+ arts.url.split("/")[2] +'</a>'
                         //     }}
-                        ,{field:'iname', title:'任务接口名', width:200}
+                        ,{field:'dname', title:'任务需求名', width:200}
                         ,{field:'finalTimeManager', title:'规定完成时间', width:200}
                         ,{field:'flag', title:'状态',templet:function (dpt) {
                             if(dpt.flag==0){

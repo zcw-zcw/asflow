@@ -81,4 +81,5 @@ public class Jobtable implements Serializable {
     private String dname;
     private int type;
     private long did;
+    private LocalDateTime finalTimeManager;
 }

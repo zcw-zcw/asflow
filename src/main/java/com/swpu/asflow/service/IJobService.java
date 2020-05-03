@@ -23,5 +23,8 @@ public interface IJobService extends IService<Job> {
     public Page<Jobtable> getdemandtestjob(Page<Jobtable> page, Long uid, Long pid);
     public Page<Jobtable> getdemandtestmanajob(Page<Jobtable> page, Long uid, Long pid);
     public Page<Jobtable> getdemandtestcoderjob(Page<Jobtable> page, Long uid, Long pid);
+    public Page<Jobtable> getmanagertocoderjob(Page<Jobtable> page, Long uid, Long pid);
+    public Page<Jobtable> getmanagertocodertestjob(Page<Jobtable> page, Long uid, Long pid);
+    public Page<Jobtable> getmanagertocoderdemandtestjob(Page<Jobtable> page, Long uid, Long pid);
 
 }

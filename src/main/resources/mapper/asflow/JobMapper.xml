@@ -10,6 +10,15 @@
    <select id="getcoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
    SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`coderid`=#{uid} AND j.pid=#{pid}
 </select>
+   <select id="getmanagertocoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+</select>
+   <select id="getmanagertocodertestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=2 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+</select>
+   <select id="getmanagertocoderdemandtestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
+  SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=3 JOIN demand d ON d.id=j.did AND j.`getid`=#{uid} AND j.pid=#{pid}
+</select>
    <select id="gettestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
    SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=2 join interface i ON i.id=j.iid AND j.`formid`=#{uid} AND j.pid=#{pid}
 </select>

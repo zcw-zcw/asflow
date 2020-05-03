@@ -75,7 +75,7 @@ else {
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             }
         }else if(type==3){
-            Job job = iJobService.getOne(Wrappers.<Job>lambdaQuery().eq(Job::getDid, id).eq(Job::getType, 2));
+            Job job = iJobService.getOne(Wrappers.<Job>lambdaQuery().eq(Job::getDid, id).eq(Job::getType, 3));
             if (job == null) {
                 boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFormid(fromid).setGetid(getid).setDid(id).setPid(pid).setFlag(0).setType(3));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
@@ -87,7 +87,38 @@ else {
             return Msg.fail().add("tip","信息错误");
         }
     }
-
+    @RequestMapping("addtestjobmanager")
+    public Msg  addtestjobmanager(@RequestParam("getid")Long getid, @RequestParam("coderid")Long coderid,  @RequestParam("date") String date, @RequestParam("id")Long id,@RequestParam("pid")Long pid,@RequestParam("type")long type){
+        final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy-MM-dd[['T'hh][:mm][:ss]]")
+                .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
+                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+                .toFormatter();
+        final LocalDateTime sendTime = LocalDateTime.parse(date, formatter);
+        if(type==2) {
+            Job job = iJobService.getOne(Wrappers.<Job>lambdaQuery().eq(Job::getIid, id).eq(Job::getType, 2));
+            if (job == null) {
+                boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setCoderid(coderid).setIid(id).setPid(pid).setFlag(0).setType(2));
+                return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
+            } else {
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setIid(id).setPid(pid).setType(2), Wrappers.<Job>lambdaQuery().eq(Job::getIid, id).eq(Job::getGetid,getid));
+                return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
+            }
+        }else if(type==3){
+            Job job = iJobService.getOne(Wrappers.<Job>lambdaQuery().eq(Job::getDid, id).eq(Job::getType, 3));
+            if (job == null) {
+                boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setCoderid(coderid).setDid(id).setPid(pid).setFlag(0).setType(3));
+                return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
+            } else {
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setDid(id).setPid(pid).setType(3), Wrappers.<Job>lambdaQuery().eq(Job::getDid, id).eq(Job::getGetid,getid));
+                return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
+            }
+        }else {
+            return Msg.fail().add("tip","信息错误");
+        }
+    }
         @GetMapping("getjob")
     public Map getJob(@RequestParam("uid")Long uid,@RequestParam("pid")Long pid, @RequestParam("page") Integer page,
                       @RequestParam("limit") Integer limit){
@@ -120,6 +151,45 @@ else {
         Page<Jobtable> pageArt=new Page<Jobtable>(page,limit);
 
         Page<Jobtable> page1 = iJobService.getcoderjob(pageArt,uid,pid);
+        return new HashMap<String, Object>() {{
+            put("code", 0);
+            put("msg", "SUCCESS");
+            put("count", page1.getTotal());
+            put("data", page1.getRecords());
+        }};
+    }
+    @GetMapping("getmanagertocoderjob")
+    public Map getmanagertocoderjob(@RequestParam("uid")Long uid,@RequestParam("pid")Long pid, @RequestParam("page") Integer page,
+                           @RequestParam("limit") Integer limit){
+        Page<Jobtable> pageArt=new Page<Jobtable>(page,limit);
+
+        Page<Jobtable> page1 = iJobService.getmanagertocoderjob(pageArt,uid,pid);
+        return new HashMap<String, Object>() {{
+            put("code", 0);
+            put("msg", "SUCCESS");
+            put("count", page1.getTotal());
+            put("data", page1.getRecords());
+        }};
+    }
+    @GetMapping("getmanagertocodertestjob")
+    public Map getmanagertocodertestjob(@RequestParam("uid")Long uid,@RequestParam("pid")Long pid, @RequestParam("page") Integer page,
+                                    @RequestParam("limit") Integer limit){
+        Page<Jobtable> pageArt=new Page<Jobtable>(page,limit);
+
+        Page<Jobtable> page1 = iJobService.getmanagertocodertestjob(pageArt,uid,pid);
+        return new HashMap<String, Object>() {{
+            put("code", 0);
+            put("msg", "SUCCESS");
+            put("count", page1.getTotal());
+            put("data", page1.getRecords());
+        }};
+    }
+    @GetMapping("getmanagertocoderdemandtestjob")
+    public Map getmanagertocoderdemandtestjob(@RequestParam("uid")Long uid,@RequestParam("pid")Long pid, @RequestParam("page") Integer page,
+                                        @RequestParam("limit") Integer limit){
+        Page<Jobtable> pageArt=new Page<Jobtable>(page,limit);
+
+        Page<Jobtable> page1 = iJobService.getmanagertocoderdemandtestjob(pageArt,uid,pid);
         return new HashMap<String, Object>() {{
             put("code", 0);
             put("msg", "SUCCESS");
@@ -224,12 +294,12 @@ else {
 
     @RequestMapping("refjob")
     public Msg refjob(@RequestParam("id")Long id){
-        boolean update=iJobService.update(new Job().setFlag(3).setType(1),Wrappers.<Job>lambdaUpdate().eq(Job::getId,id));
+        boolean update=iJobService.update(new Job().setFlag(3),Wrappers.<Job>lambdaUpdate().eq(Job::getId,id));
         return update?Msg.success():Msg.fail();
     }
     @RequestMapping("reftestjob")
     public Msg reftestjob(@RequestParam("id")Long id){
-        boolean update=iJobService.update(new Job().setFlag(3).setType(2),Wrappers.<Job>lambdaUpdate().eq(Job::getId,id));
+        boolean update=iJobService.update(new Job().setFlag(3),Wrappers.<Job>lambdaUpdate().eq(Job::getId,id));
         return update?Msg.success():Msg.fail();
     }
     @RequestMapping("refdemandtestjob")

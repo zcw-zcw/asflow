@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+</head>
+<body>
+<div id="v_addjob">
+<div>
+    <br />
+    完成时间: <div class="layui-input-inline">
+    <input type="text" class="layui-input" id="test1" placeholder="yyyy-MM-dd">
+</div>
+    <br />
+    <br />
+    <br />
+    <label>任务描述：</label><textarea id="content" rows="5" cols="30" style="vertical-align:top" placeholder="请输入任务描述"></textarea>
+    <br />
+    <br />
+    <br />
+    接收人：<select v-model="couponSelected" @change="getCouponSelected">
+        <option :value="m.uid"  v-for="m in manager" style="width: 100px">姓名：{{m.name}},组号：{{m.groupid}}</option>
+    </select>
+    <br />
+    <br />
+    <br />
+
+    <br />
+    <br />
+    <button style="margin-left: 30vw;" onclick=sub()>确定</button><button style="margin-left: 20vw;" onclick="parent.layer.closeAll()">取消</button>
+</div>
+</div>
+</body>
+<script src="/lib/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/lib/layer/layer.js"></script>
+<script src="/js/common.js"></script>
+<script src="/lib/vue.js"></script>
+<script>
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code!="1") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    var v_addjob=new Vue({
+        el: '#v_addjob',
+        data: {
+            manager:[],
+            couponSelected: '',
+        },
+        methods:{
+            getCouponSelected:function(){
+                console.log(this.couponSelected)
+            }
+
+        }});
+    $.ajax({
+        url:"/department/getCoder",
+        type:"get",
+    data:{pid:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==100){
+                v_addjob.manager=msg.data.tip;
+            }
+        }
+
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //常规用法
+        laydate.render({
+            elem: '#test1'
+        });});
+    function sub() {
+        var test1=$("#test1").val();
+        console.log(test1);
+        var content=$("#content").val();
+        if(test1==""||test1==null||content==""||content==null){
+            layer.msg('信息不完整', {
+                icon: 1,
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            });
+        }else {
+            $.ajax({
+                url:"/job/addtestjobmanager",
+                type:"post",
+                data:{id:getParam("id"),pid:parent.getParam("pid"),coderid:v_addjob.couponSelected,date:test1,getid:sessionStorage.getItem("uid"),type:getParam("type")},
+                success:function (msg) {
+                    if(msg.code==200){
+                        parent.layer.msg('添加失败', {
+                            icon: 1,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }else{
+                        parent.layer.msg('添加成功', {
+                            icon: 1,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        },function () {
+                            parent.location=parent.location;
+                        });
+                    }
+
+                }
+            })
+        }
+    }
+</script>
+</html>

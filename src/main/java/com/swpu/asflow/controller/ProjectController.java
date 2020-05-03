@@ -166,4 +166,10 @@ public class ProjectController {
         return next?Msg.success():Msg.fail();
     }
 
+    @PostMapping("nextDemandTest")
+    public Msg nextDemandTest(@RequestParam("pid")Long pid){
+        boolean next=iProjectService.update(new Project().setStage(6),Wrappers.<Project>lambdaQuery().eq(Project::getId,pid));
+        return next?Msg.success():Msg.fail();
+    }
+
 }

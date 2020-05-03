@@ -60,7 +60,7 @@ public class Interfacepdf {
 
         try {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-            document.addTitle("Demand of PDF");
+            document.addTitle("Interface of PDF");
             document.open();
             PdfPTable table = createTable(writer,interfaceList);
             document.add(table);

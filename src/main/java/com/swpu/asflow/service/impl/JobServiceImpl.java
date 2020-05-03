@@ -60,7 +60,22 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements IJobS
     }
 
     @Override
+    public Page<Jobtable> getmanagertocodertestjob(Page<Jobtable> page, Long uid, Long pid) {
+        return jobMapper.getmanagertocodertestjob(page,uid,pid);
+    }
+
+    @Override
+    public Page<Jobtable> getmanagertocoderjob(Page<Jobtable> page, Long uid, Long pid) {
+        return jobMapper.getmanagertocoderjob(page,uid,pid);
+    }
+
+    @Override
     public Page<Jobtable> getdemandtestmanajob(Page<Jobtable> page, Long uid, Long pid) {
         return jobMapper.getdemandtestmanajob(page,uid,pid);
+    }
+
+    @Override
+    public Page<Jobtable> getmanagertocoderdemandtestjob(Page<Jobtable> page, Long uid, Long pid) {
+        return jobMapper.getmanagertocoderdemandtestjob(page,uid,pid);
     }
 }

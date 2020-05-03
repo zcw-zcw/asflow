@@ -121,7 +121,7 @@
 				uname: "",
 				pname:"",
 				stage:"",
-				location:["demand","model_list","interface_list","code_list","interfacetest","demandtest"],
+				location:["demand","model_list","interface_list","code_list","interfacetest","demandtest","demandtest"],
 				people:{},
 				num:sessionStorage.getItem("num")
 			},
@@ -146,7 +146,10 @@
 			},
 			methods:{
 				 turn:function(stage){
-
+				if(stage==5){
+					location="/"+v_project.location[v_project.stage-1]+"?pid="+pid;
+					return;
+				}
 				if(stage<=v_project.stage){
 					location="/"+v_project.location[stage-1]+"?pid="+pid;
 				}else {

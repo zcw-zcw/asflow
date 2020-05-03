@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- <link href="lib/layui/css/modules/layer/default/layer.css" /> -->
     <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
     <link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
-    <link href="/css/model_list.css" rel="stylesheet" />
+    <link href="/css/cxy.css" rel="stylesheet" />
 </head>
-<style>
-    .layui-table-cell {
-        height: auto;
-    }
-</style>
 <body>
-<div><button style="font-size: 20px" onclick=searchJob()>查看已发布的任务</button></div>
+<div id="v_demandtest">
+    <ul class="layui-nav">
+        <li class="layui-nav-item top_title">
+
+            <a style="font-size: 3.5vw!important;letter-spacing: 1vw; color: white;cursor: pointer;" href="index" >欢迎进入AS软件开发全流程管理平台</a>
+        </li>
+
+
+        <!-- <li class="layui-nav-item">
+    <a href="">个人中心<span class="layui-badge-dot"></span></a>
+    </li> -->
+        <li class="layui-nav-item" lay-unselect="" style="float: right;margin-right: 2vw;">
+            <a href="javascript:;">
+                <!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎:{{uname}}</a>
+            <dl class="layui-nav-child">
+                <dd><a style="cursor: pointer;" onclick=creat()>创建项目</a></dd>
+                <dd><a style="cursor: pointer;" onclick=xinxi()>修改信息</a></dd>
+                <dd><a style="cursor: pointer;" onclick=mail()>发邮件</a></dd>
+                <!-- <dd><a href="javascript:;">安全管理</a></dd> -->
+                <dd><a style="cursor: pointer;" onclick=layout()>退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item" style="float: right;">
+
+            <a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
+        </li>
+    </ul>
+<div>
+    <span style="margin: 20px;font-size: 20px;color:red">当前阶段：需求测试</span><button style="font-size: 20px;margin-top: 20px" onclick=searchJob()>查看已发布的任务</button></div>
 
 <br>
 <div>
     <table style="width: 60%;margin: 0 auto" class="layui-hide" id="test" lay-filter="test"></table>
-</div>
+</div></div>
 </body>
 <script src="/lib/jquery-3.4.1.min.js"></script>
 <script src="/lib/layui/layui.js" charset="utf-8"></script>
@@ -30,6 +55,36 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">完成测试</a>
 </script>
 <script>
+    $.ajax({
+        url:"project/join",
+        type:"get",
+        data:{id:getParam("pid"),uid:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            if (msg.code==200) {
+                alert(msg.data.tip);
+            }else {
+                if (msg.data.code!="0") {
+                    alert("无权访问");
+                    location="/index";
+                }
+            }
+        }
+    })
+    $.ajax({
+        url:"/mail/getnum",
+        type:"get",
+        data:{id:sessionStorage.getItem("uid")},
+        success:function (msg) {
+            sessionStorage.setItem("num",msg.data.tip);
+        }
+    });
+    var v_demandtest=new Vue({
+        el: '#v_demandtest',
+        data: {
+            data1:[],
+            uname: sessionStorage.getItem("name"),
+            num:sessionStorage.getItem("num")
+        },});
     $.ajax({
         url:"project/join",
         type:"get",

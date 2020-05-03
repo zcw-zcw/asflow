@@ -9,7 +9,7 @@
 		<div>
 			<br />
 			
-		<input type="checkbox" id="check" checked style="margin-left: 30px;margin-right: 30px;" ><label>处理所有模块</label>
+		<input type="checkbox" id="check" checked style="margin-left: 30px;margin-right: 30px;" ><label>测试所有接口</label>
 		<br />
 		<br />
 		<br />
@@ -35,35 +35,21 @@
 			}
 		}
 	})
-function sure() {
-    $.ajax({
-        url: "/project/nextcode",
-        type: "post",
-        data: {pid: parent.location.search.split("=")[1]},
-        success: function (msg) {
-            if (msg.code == 100) {
-				$.ajax({
-					url:"project/join",
-					type:"get",
-					data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
-					success:function (msg) {
-						if (msg.code==200) {
-							alert(msg.data.tip);
-						}else {
-							if (msg.data.code=="0") {
-								parent.location = "/code_list?pid=" + parent.getParam("pid");
-							}else {
-								parent.location = "/code_list_manager?pid=" + parent.getParam("pid");
-							}
-						}
+
+	function sure() {
+
+			$.ajax({
+				url:"/project/nextDemandTest",
+				type:"post",
+				data:{pid:parent.location.search.split("=")[1]},
+				success:function (msg) {
+					if(msg.code==100){
+						parent.location="/demandtest?pid="+parent.location.search.split("=")[1];
 					}
-				})
+				}
+			})
 
-            }
-        }
-    })
 
-}
-
+	}
 </script>
 </html>

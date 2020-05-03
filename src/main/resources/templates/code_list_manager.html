@@ -64,6 +64,7 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">提交编码</a>
 </script>
 <script>
+
     if (!check(4)){
         $(".layui-btn").css("background-color","grey");
         $(".layui-btn").css("cursor","not-allowed");
@@ -159,7 +160,13 @@
         table.on('tool(test)', function(obj){
             var data = obj.data;
             if(obj.event === 'code'){
-                if (check(4)){
+                $.ajax({
+                    url:"/project/check",
+                    type:"get",
+                    data:{pid:parent.getParam("pid")},
+                    success:function (msg) {
+                        if(msg.code==100){
+                            if(msg.data.project.stage==4){
                 layer.open({
                     title: '下发任务',
                     closeBtn: 1,
@@ -170,9 +177,16 @@
                     maxmin: true,
                     content: '/add_job_manager?iid='+obj.data.iid,
 
-                });}else {alert("违规操作")}}
+                });}
+                else {alert("违规操作")}}}})}
             else if(obj.event==='fin'){
-                if(check(4)){
+                    $.ajax({
+                        url:"/project/check",
+                        type:"get",
+                        data:{pid:parent.getParam("pid")},
+                        success:function (msg) {
+                            if(msg.code==100){
+                                if(msg.data.project.stage==4){
                 layer.open({
                     title: '提交任务',
                     closeBtn: 1,
@@ -186,7 +200,7 @@
                 });}else {
                     alert("违规操作")
                 }
-            }
+            }}})}
 
 
 
