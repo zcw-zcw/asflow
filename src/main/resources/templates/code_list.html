@@ -44,8 +44,9 @@
         </li>
     </ul>
     <div><span style="margin: 20px;font-size: 20px;color:red">当前阶段：编码</span>
-        <button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看接口文档</button></div>
-    <button style="float: right;font-size: 20px" onclick=searchJob()>查看已发布的任务</button>
+        <button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看接口文档</button>
+    <button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=getsql()>下载sql文件</button>
+    <button style="float: right;font-size: 20px" onclick=searchJob()>查看已发布的任务</button></div>
     <div class="one">
         <p>我的接口</p>
 
@@ -95,7 +96,7 @@ $.ajax({
     })
     function showpdf() {
         layer.open({
-            title: '需求文档',
+            title: '接口文档',
             closeBtn: 1,
             shadeClose: true,
             type: 2,

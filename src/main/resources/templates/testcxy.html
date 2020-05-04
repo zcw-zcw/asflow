@@ -12,6 +12,7 @@
 		<link href="/css/cxy.css" rel="stylesheet" />
 	</head>
 	<body>
+	<div id="v_test">
 		<ul class="layui-nav">
 					<li class="layui-nav-item top_title">
 		
@@ -38,10 +39,14 @@
 						<a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
 					</li>
 				</ul>
+		<div><span style="margin: 20px;font-size: 20px;color:red">当前阶段：接口测试</span>
+			<button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看接口文档</button>
+			<button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=getsql()>下载sql文件</button>
+		</div>
 				<div class="one"><p>我的任务</p></div>
 		<div class="two">
 			<table class="layui-hide" id="test" lay-filter="test"></table>
-		</div>
+		</div></div>
 	</body>
 	<script src="/lib/jquery-3.4.1.min.js"></script>
 	<script src="/lib/layui/layui.js" charset="utf-8"></script>
@@ -52,6 +57,30 @@
 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">提交测试结果</a>
 	</script>
 	<script>
+		function getsql() {
+			$.ajax({
+				url:"/sql/getsql",
+				type:"get",
+				data:{pid:getParam("pid")},
+				success:function (msg) {
+					location=msg.data.sql.url;
+				}
+			})
+		}
+
+		function showpdf() {
+			layer.open({
+				title: '接口文档',
+				closeBtn: 1,
+				shadeClose: true,
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: '/add_showpdf?pid='+getParam("pid")+"&stage=3",
+
+			});
+		}
 		$.ajax({
 			url:"project/join",
 			type:"get",
@@ -75,8 +104,8 @@
 				sessionStorage.setItem("num",msg.data.tip);
 			}
 		});
-		var v_code=new Vue({
-			el: '#v_code',
+		var v_test=new Vue({
+			el: '#v_test',
 			data: {
 				data1:[],
 				uname: sessionStorage.getItem("name"),
@@ -151,7 +180,7 @@
 						area: ['300px', '200px'],
 						fixed: false, //不固定
 						maxmin: true,
-						content: '/add_subtestjob?iid='+obj.data.iid,
+						content: '/add_subtestjob?iid='+obj.data.iid+"&type=2",
 
 					});
 				}

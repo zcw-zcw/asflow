@@ -12,6 +12,7 @@
 		<link href="/css/cxy.css" rel="stylesheet" />
 	</head>
 	<body>
+	<div id="v_cxy">
 		<ul class="layui-nav">
 					<li class="layui-nav-item top_title">
 		
@@ -24,7 +25,7 @@
 		</li> -->
 					<li class="layui-nav-item" lay-unselect="" style="float: right;margin-right: 2vw;">
 						<a href="javascript:;">
-							<!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎</a>
+							<!-- <img src="//t.cn/RCzsdCq" class="layui-nav-img"> -->欢迎：{{uname}}</a>
 						<dl class="layui-nav-child">
 							<dd><a style="cursor: pointer;" onclick=creat()>创建项目</a></dd>
 							<dd><a style="cursor: pointer;" onclick=xinxi()>修改信息</a></dd>
@@ -38,10 +39,15 @@
 						<a href="/msg">消息<span class="layui-badge" >{{num}}</span></a>
 					</li>
 				</ul>
+		<div><span style="margin: 20px;font-size: 20px;color:red">当前阶段：编码</span>
+			<button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看接口文档</button>
+			<button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=getsql()>下载sql文件</button>
+		</div>
 				<div class="one"><p>我的任务</p></div>
 		<div class="two">
 			<table class="layui-hide" id="test" lay-filter="test"></table>
 		</div>
+	</div>
 	</body>
 	<script src="/lib/jquery-3.4.1.min.js"></script>
 	<script src="/lib/layui/layui.js" charset="utf-8"></script>
@@ -52,6 +58,26 @@
 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">提交编码</a>
 	</script>
 	<script>
+		var v_cxy=new Vue({
+			el: '#v_cxy',
+			data: {
+				data1:[],
+				uname: sessionStorage.getItem("name"),
+				num:sessionStorage.getItem("num")
+			},});
+		function showpdf() {
+			layer.open({
+				title: '接口文档',
+				closeBtn: 1,
+				shadeClose: true,
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: '/add_showpdf?pid='+getParam("pid")+"&stage=3",
+
+			});
+		}
 		$.ajax({
 			url:"project/join",
 			type:"get",
@@ -122,7 +148,19 @@
 							}else {
 								return "再次提交";
 							}
-						}} ,{field:'completion', title:'完成百分比', width:200}
+						}} ,{field:'completion', title:'完成百分比', width:200,templet:function (dpt) {
+							if(dpt.completion==0){
+								return '小于50%';
+							}else if(dpt.completion==2){
+								return '50%';
+							}else if(dpt.completion==3){
+								return '75%';
+							}else if(dpt.completion==4){
+								return '100%';
+							}else {
+								return "";
+							}
+						}}
 						,{fixed: '', title:'操作', toolbar: '#barDemo'}
 					]
 				]

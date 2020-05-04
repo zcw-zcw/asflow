@@ -1,6 +1,7 @@
 package com.swpu.asflow.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.swpu.asflow.entity.Sqltbl;
 import com.swpu.asflow.service.ISqlService;
 import com.swpu.asflow.utils.Msg;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -30,6 +32,7 @@ public class SqlController {
     @PostMapping("upload")
     public Msg upload(@RequestParam("upfile") MultipartFile files, @RequestParam("uid") long uid,
                       @RequestParam("pid") long pid) {
+        Sqltbl sqltbl=iSqlService.getOne(Wrappers.<Sqltbl>lambdaQuery());
         if (files == null) {
             return Msg.fail().add("tip", "未选择文件，请重试。");
         }
@@ -51,9 +54,15 @@ public class SqlController {
                 while ((len = inputStream.read(bs)) != -1) {
                     os.write(bs, 0, len);
                 }
+                if (sqltbl==null){
                 boolean save = iSqlService.save(new Sqltbl().setPid(pid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/sql/" + files.getOriginalFilename()));
                 if (!save) {
                     return Msg.fail().add("tip", "保存失败");
+                }}else {
+                    boolean save = iSqlService.update(new Sqltbl().setPid(pid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/sql/" + files.getOriginalFilename()),Wrappers.<Sqltbl>lambdaUpdate().eq(Sqltbl::getPid,pid));
+                    if (!save) {
+                        return Msg.fail().add("tip", "保存失败");
+                    }
                 }
 
         } catch (IOException e) {
@@ -64,14 +73,10 @@ public class SqlController {
         return Msg.success().add("tip", "保存成功");
     }
 
-//    @GetMapping("getphoto")
-//    public Msg getphoto(@RequestParam("iid") long iid,@RequestParam("did") long did, @RequestParam("type") long type) {
-//        if (type == 2) {
-//            return Msg.success().add("photo", iTestService.list(Wrappers.<Test>lambdaQuery().eq(Test::getIid, iid)));
-//        } else if (type == 3) {
-//            return Msg.success().add("photo", iTestService.list(Wrappers.<Test>lambdaQuery().eq(Test::getDid, did)));
-//        } else {
-//            return Msg.fail().add("tip","类型不正确");
-//        }
-//    }
+    @GetMapping("getsql")
+    public Msg getsql(@RequestParam("pid") long pid) {
+
+            return Msg.success().add("sql", iSqlService.getOne(Wrappers.<Sqltbl>lambdaQuery().eq(Sqltbl::getPid, pid)));
+
+    }
 }

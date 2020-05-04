@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/lib/layui/css/modules/layer/default/layer.css" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -16,6 +17,7 @@
 <script src="/js/common.js"></script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">打回任务</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check">查看结果</a>
 </script>
 <script>
     var  uid=sessionStorage.getItem("uid");
@@ -97,7 +99,19 @@
                                 }
                             }
                         })
-                    })}
+                    })}else if(obj.event==="check"){
+                    layer.open({
+                        title: '查看截图',
+                        closeBtn: 1,
+                        shadeClose: true,
+                        type: 2,
+                        area: ['800px', '600px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '/searchphoto?iid='+obj.data.iid+"&type="+obj.data.type+"&did="+obj.data.did,
+
+                    });
+                }
 
 
 

@@ -79,3 +79,13 @@ function check(i) {
 			}
 		})}
 
+function getsql() {
+	$.ajax({
+		url:"/sql/getsql",
+		type:"get",
+		data:{pid:getParam("pid")},
+		success:function (msg) {
+			location=msg.data.sql.url;
+		}
+	})
+}

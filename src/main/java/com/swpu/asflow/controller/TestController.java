@@ -53,9 +53,15 @@ public class TestController {
                 while ((len = inputStream.read(bs)) != -1) {
                     os.write(bs, 0, len);
                 }
-                boolean save = iTestService.save(new Test().setDisc(dis).setIid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
+                if (type==2) {
+                    boolean save = iTestService.save(new Test().setDisc(dis).setIid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
                 if (!save) {
                     return Msg.fail().add("tip", "保存失败");
+                }}if (type==3){
+                    boolean save = iTestService.save(new Test().setDisc(dis).setDid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
+                    if (!save) {
+                        return Msg.fail().add("tip", "保存失败");
+                    }
                 }
             }
         } catch (IOException e) {

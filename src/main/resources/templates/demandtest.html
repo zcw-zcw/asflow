@@ -38,7 +38,9 @@
         </li>
     </ul>
 <div>
-    <span style="margin: 20px;font-size: 20px;color:red">当前阶段：需求测试</span><button style="font-size: 20px;margin-top: 20px" onclick=searchJob()>查看已发布的任务</button></div>
+    <span style="margin: 20px;font-size: 20px;color:red">当前阶段：需求测试</span>
+    <button style="margin: 20px;font-size: 20px;color:black;display: inline" onclick=showpdf()>查看需求文档</button>
+    <button style="font-size: 20px;margin-top: 20px" onclick=searchJob()>查看已发布的任务</button></div>
 
 <br>
 <div>
@@ -55,6 +57,19 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">完成测试</a>
 </script>
 <script>
+    function showpdf() {
+        layer.open({
+            title: '需求文档',
+            closeBtn: 1,
+            shadeClose: true,
+            type: 2,
+            area: ['800px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/add_showpdf?pid='+getParam("pid")+"&stage=1",
+
+        });
+    }
     $.ajax({
         url:"project/join",
         type:"get",

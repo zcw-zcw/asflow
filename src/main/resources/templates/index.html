@@ -141,7 +141,25 @@ if (msg.code==200) {
 	}else if(msg.data.code=="1"){
 		location="/project_manager?pid="+msg.data.pid;
 	}else {
-		location="/cxy?pid="+msg.data.pid;
+		$.ajax({
+			url:"/project/check",
+			type:"get",
+			data:{pid:msg.data.pid},
+			success:function (msg2) {
+				if (msg2.code == 100) {
+					if (msg2.data.project.stage <=4) {
+						location="/cxy?pid="+msg.data.pid;
+
+
+					}else if(msg2.data.project.stage ==5){
+						location="/testcxy?pid="+msg.data.pid;
+					}else {
+						location="/demandtestcxy?pid="+msg.data.pid;
+					}
+				}
+			}
+		})
+
 	}
 }
 				  }

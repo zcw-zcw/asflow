@@ -56,6 +56,6 @@ public class Test implements Serializable {
      */
     private String disc;
     private Integer  type;
-    private Integer did;
+    private Long did;
 
 }
