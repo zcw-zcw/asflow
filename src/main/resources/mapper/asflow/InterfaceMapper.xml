@@ -5,7 +5,7 @@
        SELECT d.title AS dname,m.id as mid,m.title AS mname,m.content AS mdis ,m.time,u.name as uname FROM demand d JOIN model m ON m.did=d.id AND d.pid=#{pid} JOIN users u ON u.id=m.uid
     </select>
     <select id="getallint" resultType="com.swpu.asflow.entity.Interface" parameterType="long">
-        select i.* from interface i join model m on  m.id=i.mid join demand d on  m.did=d.id and d.pid=#{pid}
+        select i.* from interface i join model m on  m.id=i.mid join demand d on  m.did=d.id and d.pid=#{pid} order by i.test_flag,i.flag
     </select>
     <select id="getint" resultType="com.swpu.asflow.entity.Interface" parameterType="long">
         select i.* from interface i join model m on  m.id=i.mid join demand d on  m.did=d.id and d.pid=#{pid}

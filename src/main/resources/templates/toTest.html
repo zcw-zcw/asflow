@@ -42,7 +42,7 @@ function sure() {
         data: {pid: parent.location.search.split("=")[1]},
         success: function (msg) {
             if (msg.code == 100) {
-                parent.location = "/test_list?pid=" + parent.getParam("pid");
+                parent.location = "/interfacetest?pid=" + parent.getParam("pid");
             }
         }
     })

@@ -96,7 +96,7 @@
             $.ajax({
                 url:"/job/addcoderjob",
                 type:"post",
-                data:{iid:getParam("iid"),pid:parent.getParam("pid"),coderid:v_addjob.couponSelected,date:test1},
+                data:{iid:getParam("id"),pid:parent.getParam("pid"),coderid:v_addjob.couponSelected,date:test1},
                 success:function (msg) {
                     if(msg.code==200){
                         parent.layer.msg('添加失败', {

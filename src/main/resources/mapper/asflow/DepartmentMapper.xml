@@ -10,7 +10,7 @@
     order by d.groupid,d.role
 </select>
     <select id="getDepart" resultType="com.swpu.asflow.entity.DptTable" >
-        select d.uid,d.pid,d.role,d.groupid ,u.name,u.phone,u.mail from users u join department d where d.uid=u.id and d.uid !=#{uid} and d.pid=#{pid}
+        select d.uid,d.pid,d.role,d.groupid ,u.name,u.phone,u.mail from users u join department d where d.uid=u.id and d.uid !=#{uid} and d.pid=#{pid} and d.role!=0
         order by d.role
     </select>
     <select id="getManager" resultType="com.swpu.asflow.entity.DptTable" parameterType="long">

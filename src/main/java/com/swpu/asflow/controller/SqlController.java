@@ -32,7 +32,7 @@ public class SqlController {
     @PostMapping("upload")
     public Msg upload(@RequestParam("upfile") MultipartFile files, @RequestParam("uid") long uid,
                       @RequestParam("pid") long pid) {
-        Sqltbl sqltbl=iSqlService.getOne(Wrappers.<Sqltbl>lambdaQuery());
+        Sqltbl sqltbl=iSqlService.getOne(Wrappers.<Sqltbl>lambdaQuery().eq(Sqltbl::getPid,pid));
         if (files == null) {
             return Msg.fail().add("tip", "未选择文件，请重试。");
         }

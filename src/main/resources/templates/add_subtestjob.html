@@ -150,7 +150,7 @@
                     contentType: false,
                     success: function (msg) {
                         if (msg.code == '100') {
-                            parent.layer.msg(msg.data.tip, {icon: 6},function () {
+                            parent.layer.msg(msg.data.tip, {icon: 1},function () {
                                 parent.layer.closeAll();
                             });
                         } else if (msg.code == '200') {

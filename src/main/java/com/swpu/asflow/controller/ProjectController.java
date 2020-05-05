@@ -51,6 +51,14 @@ public class ProjectController {
         for ( Department arrar : arrayList){
             list.add(arrar.getPid());
         }
+        if(list.isEmpty()){
+            return new HashMap<String, Object>() {{
+                put("code", 0);
+                put("msg", "SUCCESS");
+                put("count", 0);
+                put("data",null);
+            }};
+        }
         Page<Project> artPage = iProjectService.page(new Page<>(page, limit), new LambdaQueryWrapper<Project>().in(Project::getId, list).orderByDesc(Project::getCreatTime));
         return new HashMap<String, Object>() {{
             put("code", 0);
@@ -115,7 +123,7 @@ public class ProjectController {
         boolean next=iProjectService.update(new Project().setStage(2),Wrappers.<Project>lambdaQuery().eq(Project::getId,pid));
         Demandpdf demandpdf =new Demandpdf();
         String filename =  System.getProperty("user.dir") + "/src/main/resources/pdf/"+pid+"demand.pdf";
-        List<Demand> list=iDemandService.list(Wrappers.<Demand>lambdaQuery().eq(Demand::getPid,11).eq(Demand::getFlag,1));
+        List<Demand> list=iDemandService.list(Wrappers.<Demand>lambdaQuery().eq(Demand::getPid,pid).eq(Demand::getFlag,1));
         try {
             demandpdf.createPDF(filename,list);
         } catch (IOException e) {
@@ -132,7 +140,7 @@ public class ProjectController {
     @PostMapping("nextint")
     public Msg nextint(@RequestParam("pid")Long pid){
         boolean next=iProjectService.update(new Project().setStage(3),Wrappers.<Project>lambdaQuery().eq(Project::getId,pid));
-        List<Demand> list=iDemandService.list(Wrappers.<Demand>lambdaQuery().eq(Demand::getPid,11).eq(Demand::getFlag,1));
+        List<Demand> list=iDemandService.list(Wrappers.<Demand>lambdaQuery().eq(Demand::getPid,pid).eq(Demand::getFlag,1));
         List<Long> longs=new ArrayList<>();
         for(Demand demand:list){
             longs.add(demand.getId());

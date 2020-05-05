@@ -2,6 +2,7 @@ package com.swpu.asflow.controller;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.swpu.asflow.entity.Job;
 import com.swpu.asflow.entity.Test;
 import com.swpu.asflow.service.IJobService;
 import com.swpu.asflow.service.ITestService;
@@ -32,7 +33,7 @@ public class TestController {
     IJobService iJobService;
 
     @PostMapping("upload")
-    public Msg upload(@RequestParam("upfile[]") MultipartFile files[], @RequestParam("completion") String completion, @RequestParam("uid") long uid,
+    public Msg upload(@RequestParam("upfile[]") MultipartFile files[], @RequestParam("completion") Integer completion, @RequestParam("uid") long uid,
                       @RequestParam("pid") long pid, @RequestParam("iid") long iid, @RequestParam("dis") String dis,@RequestParam("type")int type) {
         if (files.length == 0) {
             return Msg.fail().add("tip", "未选择文件，请重试。");
@@ -53,12 +54,19 @@ public class TestController {
                 while ((len = inputStream.read(bs)) != -1) {
                     os.write(bs, 0, len);
                 }
+                int flag=1;
+                if (completion==4){
+                    flag=2;
+                }
                 if (type==2) {
+
                     boolean save = iTestService.save(new Test().setDisc(dis).setIid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
-                if (!save) {
+                    boolean update=iJobService.update(new Job().setSubTime(LocalDateTime.now()).setFlag(flag).setCompletion(completion).setSubid(uid),Wrappers.<Job>lambdaQuery().eq(Job::getIid,iid).eq(Job::getPid,pid));
+                if (!save||update) {
                     return Msg.fail().add("tip", "保存失败");
                 }}if (type==3){
                     boolean save = iTestService.save(new Test().setDisc(dis).setDid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
+                    boolean update=iJobService.update(new Job().setSubTime(LocalDateTime.now()).setFlag(flag).setCompletion(completion).setSubid(uid),Wrappers.<Job>lambdaQuery().eq(Job::getDid,iid).eq(Job::getPid,pid));
                     if (!save) {
                         return Msg.fail().add("tip", "保存失败");
                     }
@@ -69,7 +77,9 @@ public class TestController {
             return Msg.fail().add("tip", "发布失败，请重试。");
         }
 
-        return Msg.success().add("tip", "保存成功");
+
+        return Msg.success().add("tip","提交成功");
+
     }
 
     @GetMapping("getphoto")

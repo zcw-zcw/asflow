@@ -18,7 +18,7 @@
     $.ajax({
         url:"project/join",
         type:"get",
-        data:{id:getParam("pid"),uid:sessionStorage.getItem("uid")},
+        data:{id:parent.getParam("pid"),uid:sessionStorage.getItem("uid")},
         success:function (msg) {
             if (msg.code==200) {
                 alert(msg.data.tip);

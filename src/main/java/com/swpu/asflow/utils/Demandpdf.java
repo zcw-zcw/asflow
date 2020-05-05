@@ -44,7 +44,7 @@ public class Demandpdf {
         cell.setFixedHeight(size);
         table.addCell(cell);
             cell = new PdfPCell(new Paragraph(list.getContent(),font));
-            cell.setFixedHeight(size);
+            cell.setFixedHeight(size*list.getContent().length()/15);
             cell.setNoWrap(false);
             table.addCell(cell);
             cell = new PdfPCell(new Paragraph(list.getTime().toString().split("T")[0],font));
