@@ -62,12 +62,12 @@ public class TestController {
 
                     boolean save = iTestService.save(new Test().setDisc(dis).setIid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
                     boolean update=iJobService.update(new Job().setSubTime(LocalDateTime.now()).setFlag(flag).setCompletion(completion).setSubid(uid),Wrappers.<Job>lambdaQuery().eq(Job::getIid,iid).eq(Job::getPid,pid));
-                if (!save||update) {
+                if (!save||!update) {
                     return Msg.fail().add("tip", "保存失败");
                 }}if (type==3){
                     boolean save = iTestService.save(new Test().setDisc(dis).setDid(iid).setTime(LocalDateTime.now()).setUid(uid).setUrl("/photo/" + file.getOriginalFilename()).setType(type));
                     boolean update=iJobService.update(new Job().setSubTime(LocalDateTime.now()).setFlag(flag).setCompletion(completion).setSubid(uid),Wrappers.<Job>lambdaQuery().eq(Job::getDid,iid).eq(Job::getPid,pid));
-                    if (!save) {
+                    if (!save||!update) {
                         return Msg.fail().add("tip", "保存失败");
                     }
                 }
