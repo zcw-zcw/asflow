@@ -2,39 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.swpu.asflow.mapper.JobMapper">
 <select id="getjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=1 join interface i ON i.id=j.iid AND j.`formid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=1 join interface i ON i.id=j.iid AND j.`formid`=#{uid} AND j.pid=#{pid} and i.flag=0
 </select>
    <select id="getmanajob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id and j.type=1 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id and j.type=1 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid} and i.flag=0
 </select>
    <select id="getcoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`coderid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`coderid`=#{uid} AND j.pid=#{pid} and i.flag=0
 </select>
    <select id="getmanagertocoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=1 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}   and i.flag=0
 </select>
    <select id="getmanagertocodertestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=2 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=2 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid} and i.test_flag=0
 </select>
    <select id="getmanagertocoderdemandtestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-  SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=3 JOIN demand d ON d.id=j.did AND j.`getid`=#{uid} AND j.pid=#{pid}
+  SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=3 JOIN demand d ON d.id=j.did AND j.`getid`=#{uid} AND j.pid=#{pid} and d.test_flag=0
 </select>
    <select id="gettestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=2 join interface i ON i.id=j.iid AND j.`formid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=2 join interface i ON i.id=j.iid AND j.`formid`=#{uid} AND j.pid=#{pid} and i.test_flag=0
 </select>
    <select id="gettestmanajob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id and j.type=2 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`getid`=u.id and j.type=2 JOIN interface i ON i.id=j.iid AND j.`getid`=#{uid} AND j.pid=#{pid} and i.test_flag=0
 </select>
    <select id="gettestcoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=2 JOIN interface i ON i.id=j.iid AND j.`coderid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,i.title AS iname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=2 JOIN interface i ON i.id=j.iid AND j.`coderid`=#{uid} AND j.pid=#{pid} and i.test_flag=0
 </select>
    <select id="getdemandtestjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=3 join demand d ON d.id=j.did and  j.`formid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`getid`=u.id  and j.type=3 join demand d ON d.id=j.did and  j.`formid`=#{uid} AND j.pid=#{pid} and d.test_flag=0
 </select>
    <select id="getdemandtestmanajob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`getid`=u.id and j.type=3 JOIN demand d ON d.id=j.did AND j.`getid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`getid`=u.id and j.type=3 JOIN demand d ON d.id=j.did AND j.`getid`=#{uid} AND j.pid=#{pid} and d.test_flag=0
 </select>
    <select id="getdemandtestcoderjob" parameterType="long" resultType="com.swpu.asflow.entity.Jobtable">
-   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=3 JOIN demand d ON d.id=j.did AND j.`coderid`=#{uid} AND j.pid=#{pid}
+   SELECT u.name AS uname, j.*,d.title AS dname FROM job j JOIN users u ON j.`coderid`=u.id and j.coderid!=0  and j.type=3 JOIN demand d ON d.id=j.did AND j.`coderid`=#{uid} AND j.pid=#{pid} and d.test_flag=0
 </select>
 </mapper>

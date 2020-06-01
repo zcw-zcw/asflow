@@ -167,7 +167,7 @@ public class DemandController {
                          @RequestParam("page") Integer page,
                          @RequestParam("limit") Integer limit){
         Page<Demand> pageArt=new Page<Demand>(page,limit);
-        Page<Demand> page1 = iDemandService.page(pageArt,new LambdaQueryWrapper<Demand>().eq(Demand::getPid,pid));
+        Page<Demand> page1 = iDemandService.page(pageArt,new LambdaQueryWrapper<Demand>().eq(Demand::getPid,pid).orderByAsc(Demand::getTestFlag));
 
         return new HashMap<String, Object>() {{
             put("code", 0);

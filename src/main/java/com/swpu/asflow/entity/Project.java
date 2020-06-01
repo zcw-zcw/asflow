@@ -40,10 +40,7 @@ public class Project implements Serializable {
     private LocalDateTime creatTime;
     private Long Uid;
 
-    /**
-     * 主项目id默认为0
-     */
-    private Long pid;
+
 
     /**
      * 当前阶段1为需求分析2为概要设计3为详细设计4为编码5为测试

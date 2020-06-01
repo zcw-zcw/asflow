@@ -49,7 +49,7 @@ public class JobController {
         boolean save=iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFormid(fromid).setGetid(getid).setIid(iid).setPid(pid).setFlag(0).setType(1));
         return save?Msg.success().add("tip","添加成功"):Msg.fail().add("tip","添加失败！");}
         else if(job!=null){
-            boolean save=iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setIid(iid).setPid(pid).setType(1),Wrappers.<Job>lambdaQuery().eq(Job::getIid,iid));
+            boolean save=iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setIid(iid).setPid(pid).setType(1),Wrappers.<Job>lambdaUpdate().eq(Job::getIid,iid));
             return save?Msg.success().add("tip","添加成功"):Msg.fail().add("tip","添加失败！");}
 else {
     return Msg.fail();
@@ -71,7 +71,7 @@ else {
                 boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFormid(fromid).setGetid(getid).setIid(id).setPid(pid).setFlag(0).setType(2));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             } else {
-                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setIid(id).setPid(pid).setType(2), Wrappers.<Job>lambdaQuery().eq(Job::getIid, id));
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setIid(id).setPid(pid).setType(2), Wrappers.<Job>lambdaUpdate().eq(Job::getIid, id));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             }
         }else if(type==3){
@@ -80,7 +80,7 @@ else {
                 boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFormid(fromid).setGetid(getid).setDid(id).setPid(pid).setFlag(0).setType(3));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             } else {
-                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setDid(id).setPid(pid).setType(3), Wrappers.<Job>lambdaQuery().eq(Job::getDid, id));
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setDisc(disc).setFinalTime(sendTime).setFlag(0).setFormid(fromid).setGetid(getid).setDid(id).setPid(pid).setType(3), Wrappers.<Job>lambdaUpdate().eq(Job::getDid, id));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             }
         }else {
@@ -103,7 +103,7 @@ else {
                 boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setCoderid(coderid).setIid(id).setPid(pid).setFlag(0).setType(2));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             } else {
-                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setIid(id).setPid(pid).setType(2), Wrappers.<Job>lambdaQuery().eq(Job::getIid, id).eq(Job::getGetid,getid));
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setIid(id).setPid(pid).setType(2), Wrappers.<Job>lambdaUpdate().eq(Job::getIid, id).eq(Job::getGetid,getid));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             }
         }else if(type==3){
@@ -112,7 +112,7 @@ else {
                 boolean save = iJobService.save(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setCoderid(coderid).setDid(id).setPid(pid).setFlag(0).setType(3));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             } else {
-                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setDid(id).setPid(pid).setType(3), Wrappers.<Job>lambdaQuery().eq(Job::getDid, id).eq(Job::getGetid,getid));
+                boolean save = iJobService.update(new Job().setCreatTime(LocalDateTime.now()).setFinalTimeManager(sendTime).setFlag(0).setCoderid(coderid).setDid(id).setPid(pid).setType(3), Wrappers.<Job>lambdaUpdate().eq(Job::getDid, id).eq(Job::getGetid,getid));
                 return save ? Msg.success().add("tip", "添加成功") : Msg.fail().add("tip", "添加失败！");
             }
         }else {

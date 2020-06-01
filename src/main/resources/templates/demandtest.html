@@ -129,7 +129,7 @@
                 [  {field:'title', title:'需求名', width:150},
                     {field:'content', title:'需求描述', width:600}
                     ,{field:'time', title:'创建时间', width:160}
-                    ,{field:'testFlag', title:'接口状态', width:200,templet:function (dpt) {
+                    ,{field:'testFlag', title:'需求状态', width:200,templet:function (dpt) {
                         if(dpt.testFlag==0){
                             return "未测试";
                         }else {
@@ -162,7 +162,7 @@
                         type:"post",
                         success:function (msg) {
                             if (msg.code===100){
-                                parent.layer.msg("完成接口测试",{icon:1,time:2000},function () {
+                                parent.layer.msg("完成需求测试",{icon:1,time:2000},function () {
                                     parent.layer.closeAll();
                                     parent.location=parent.location;
                                 })
